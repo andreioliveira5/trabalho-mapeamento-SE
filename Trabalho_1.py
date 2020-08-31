@@ -25,3 +25,5 @@ def nemor()
 '''
 
 print(matrix_tri)
+
+
