@@ -6,10 +6,10 @@ with open('tests.json', 'r') as json_file: #le os aquivos do arquivo json
 
 print(dados)
 
-clusters = dados[1]   #é passado para a avrialvel clusters os dados do primeiro elemento da variavel dados
+clusters = dados[0]   #é passado para a avrialvel clusters os dados do primeiro elemento da variavel dados
 #são passados para as variaveis as dimentos do cluster
-linha = clusters['cluster_x']
-coluna = clusters['cluster_y']
+linha = clusters['mpsoc_x']
+coluna = clusters['mpsoc_y']
 profundidade = clusters['tasks_per_pe'] #iremos estabelecer que o numero de tarefas por noso sera a profundidade da matrix
 
 print('\n')
@@ -25,5 +25,3 @@ def nemor()
 '''
 
 print(matrix_tri)
-
-

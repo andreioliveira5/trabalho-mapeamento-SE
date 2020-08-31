@@ -10,16 +10,16 @@
 		[
 			{
 				"app_name": "App0",
-				"qtd_apps": 1,
+				"qtd_apps": 1
 			},
 			{
 				"app_name": "App1",
-				"qtd_apps": 1,
+				"qtd_apps": 1
 			},
 			{
 				"app_name": "App2",
-				"qtd_apps": 1,
-			},
+				"qtd_apps": 1
+			}
 		]
 	},
 	{
@@ -33,16 +33,16 @@
 		[
 			{
 				"app_name": "App0",
-				"qtd_apps": 3,
+				"qtd_apps": 3
 			},
 			{
 				"app_name": "App1",
-				"qtd_apps": 1,
+				"qtd_apps": 1
 			},
 			{
 				"app_name": "App2",
-				"qtd_apps": 1,
-			},
+				"qtd_apps": 1
+			}
 		]
 	},
 	{
@@ -56,12 +56,12 @@
 		[
 			{
 				"app_name": "App0",
-				"qtd_apps": 1,
+				"qtd_apps": 1
 			},
 			{
 				"app_name": "App1",
-				"qtd_apps": 3,
-			},
+				"qtd_apps": 3
+			}
 		]
 	},
 	{
@@ -75,16 +75,16 @@
 		[
 			{
 				"app_name": "App0",
-				"qtd_apps": 10,
+				"qtd_apps": 10
 			},
 			{
 				"app_name": "App1",
-				"qtd_apps": 2,
+				"qtd_apps": 2
 			},
 			{
 				"app_name": "App2",
-				"qtd_apps": 8,
-			},
+				"qtd_apps": 8
+			}
 		]
 	},
 	{
@@ -98,16 +98,16 @@
 		[
 			{
 				"app_name": "App0",
-				"qtd_apps": 10,
+				"qtd_apps": 10
 			},
 			{
 				"app_name": "App1",
-				"qtd_apps": 5,
+				"qtd_apps": 5
 			},
 			{
 				"app_name": "App2",
-				"qtd_apps": 10,
-			},
+				"qtd_apps": 10
+			}
 		]
-	},
+	}
 ]
