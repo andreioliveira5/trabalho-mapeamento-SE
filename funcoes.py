@@ -1,12 +1,13 @@
 import numpy as np
 
-def localiza(matriz_tri,cluster, ligacoes, mpsoc_x, mpsoc_y, cluster_x, cluster_y): #Função para localizar no vazio em um determinado cluster com uma deternada quantidade de liagções
+def localiza(matriz_tri, cluster, ligacoes, mpsoc_x, mpsoc_y, cluster_x, cluster_y): #Função para localizar no vazio em um determinado cluster com uma deternada quantidade de liagções
     matriz_loc = np.zeros((cluster_x, cluster_y))
     numero_clusters = int((mpsoc_x/cluster_x)*(mpsoc_y/cluster_y))
     soma_linha = 0
     soma_coluna = 0
     linha = 0
     coluna = 0
+    posi_loc = False
     for i in range(numero_clusters):#localiza a posicao do cluster
 
         if cluster == i:
@@ -100,18 +101,52 @@ def localiza(matriz_tri,cluster, ligacoes, mpsoc_x, mpsoc_y, cluster_x, cluster_
                     if matriz_loc[i,j+1] >= 1:
                         matriz_loc[i,j] += 1
 
+    menor = localizaMenorValor(matriz_loc)
+    maior = localizaMaiorValor(matriz_loc)
+    if ligacoes == 0:
+        ligacoes = 1
+    if ligacoes < menor:
+        ligacoes = menor
+    if ligacoes > maior:
+        ligacoes = maior
+    
     for i in range(cluster_x):#encontra a posição do nodo com a qunatidade de ligacoes especificadas
         for j in range(cluster_y):
             if matriz_loc[i,j] == ligacoes:
                 linha = i
                 coluna = j
+                posi_loc = True
                 break
-        if matriz_loc[linha,coluna] == ligacoes:
+        if posi_loc == True:
             break
+    
    
     print(matriz_loc)
    
     return(soma_linha+linha, soma_coluna+coluna)
+
+
+
+def localizaMaiorValor(matriz_loc):#função para ocalizar maior vavol dentro da matriz
+    resp = (0, 0)
+    maior = matriz_loc[0][0]
+    for lin in range(len(matriz_loc)):
+        for col in range(len(matriz_loc[lin])):
+            if matriz_loc[lin][col] > matriz_loc[resp[0]][resp[1]]:
+                maior = matriz_loc[lin][col] 
+                resp = (lin, col)
+    return(maior)
+
+
+def localizaMenorValor(matriz_loc):#função para ocalizar menor vavol dentro da matriz
+    resp = (0, 0)
+    menor = matriz_loc[0][0]
+    for lin in range(len(matriz_loc)):
+        for col in range(len(matriz_loc[lin])):
+            if matriz_loc[lin][col] < matriz_loc[resp[0]][resp[1]]:
+                menor = matriz_loc[lin][col]
+                resp = (lin, col) 
+    return(menor)
 
 
 
@@ -124,7 +159,10 @@ def mostrar(matriz_tri, mpsoc_x, mpsoc_y, cluster_x, cluster_y, tasks_per_pe):#f
             print("[", end="")
             for k in range(tasks_per_pe):
                 print("-", end="")
-                print(matriz_tri[k,i,j], end="")
+                if matriz_tri[k,i,j] != 0:
+                    print(matriz_tri[k,i,j]-1, end="")
+                else:
+                    print(matriz_tri[k,i,j], end="")
                 print("-", end="")
             print("]", end="")
             if ((j+1)%cluster_y) == 0:

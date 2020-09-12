@@ -32,7 +32,7 @@ for ind_tests in range(numero_teste):
 
     soma_linha = 0
     soma_coluna = 0
-
+    stop = False
 
     print('\n')
     print('Teste ', mpsoc['id'])
@@ -45,30 +45,38 @@ for ind_tests in range(numero_teste):
             qtd_apps = app['qtd_apps']
             if app_name == name:
                 print(name)
+                stop = False
                 tasks = app_test['tasks']
-                for e in range(1):#for para rodas tantas vezes um app ####qtd_apps######?????????
+                for e in range(qtd_apps):#for para rodas tantas vezes um app, se tiver mas tarefas do que nodos disponiveis no cluster o for é quebrado
                     for d in range(app_test['number_tasks']):#for para buscar as tarefas de cada app
                         task = tasks[d]
                         ID = task['id']
                         print(ID)
-                        matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] = ID #adiciona os dados na matriz 
+                        if matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] == 0:#caso o nodo esteja livre insere se não busca outro
+                            matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] = ID+1 #adiciona os dados na matriz 
+                        else:
+                            d-=1
                         if profundidade < (tasks_per_pe-1):#vai mudando as possições para salvar as tarefas
                             profundidade +=1
                         else:
                             profundidade = 0
-                            if (coluna+soma_coluna) < (mpsoc_y-1):
+                            if (coluna) < (cluster_y-1):
                                 coluna += 1 
                             else:
                                 coluna = 0
-                                if (linha+soma_linha) < (mpsoc_x-1):
+                                if (linha) < (cluster_x-1):
                                     linha += 1
                                 else:
                                     linha = 0
+                                    stop = True # para quebrar o for quando tiver mais tarefas do que espaço
+                                    break
+                    if stop == True:
+                        break
 
                 if cluster < (numero_clusters-1):#muda de cluster para cada app
                         cluster +=1
                         [soma_linha,soma_coluna]=f.posicao_cluster(cluster, mpsoc_x, mpsoc_y, cluster_x, cluster_y)
-                        limha = 0
+                        linha = 0
                         coluna = 0
                         profundidade = 0
                 else:
@@ -87,10 +95,7 @@ for ind_tests in range(numero_teste):
     
 
            
-#[i,j] = f.localiza(matriz_tri, 1, 2, mpsoc_x, mpsoc_y, cluster_x,cluster_y)
+#[i,j] = f.localiza(matriz_tri, 3, 3, mpsoc_x, mpsoc_y, cluster_x,cluster_y)
 #print(i)
 #print(j)
 
-def inserir():
-
-    return()
