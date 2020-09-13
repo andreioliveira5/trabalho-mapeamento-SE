@@ -160,9 +160,9 @@ def mostrar(matriz_tri, mpsoc_x, mpsoc_y, cluster_x, cluster_y, tasks_per_pe):#f
             for k in range(tasks_per_pe):
                 print("-", end="")
                 if matriz_tri[k,i,j] != 0:
-                    print(matriz_tri[k,i,j]-1, end="")
+                    print(int(matriz_tri[k,i,j]-1), end="")
                 else:
-                    print(matriz_tri[k,i,j], end="")
+                    print(int(matriz_tri[k,i,j]), end="")
                 print("-", end="")
             print("]", end="")
             if ((j+1)%cluster_y) == 0:
