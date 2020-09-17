@@ -1,7 +1,11 @@
 import struct 
 from collections import namedtuple
-  
+#import ctypes
 
+#libhello = ctypes.cdll.LoadLibrary("./libhello.so")
+#libhello.swap()
+#https://docs.python.org/3/library/ctypes.html
+#https://pt.stackoverflow.com/questions/94210/como-incluir-no-python-uma-fun%C3%A7%C3%A3o-feita-em-c
 
 PE = namedtuple('PE', ['app', 'tasks'])
 task = namedtuple('task', ['id', 'comunication'])

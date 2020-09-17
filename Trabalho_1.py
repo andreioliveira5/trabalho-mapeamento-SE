@@ -1,12 +1,16 @@
 import numpy as np
 import json
-import funcoes as f
+import funcoes_mapeamento as fm
+import funcoes_custo_comum as fc
 
 with open('tests.json', 'r') as json_file: #le os aquivos do arquivo json
     dados_tests = json.load(json_file) # passa os aquivos lidos para a aviavel dados_tests
 
 with open('apps_test.json', 'r') as json_file: #le os aquivos do arquivo json
     dados_apps = json.load(json_file) # passa os aquivos lidos para a aviavel dados_apps
+
+with open('messages.json', 'r') as json_file: #le os aquivos do arquivo json
+    messages = json.load(json_file) # passa os aquivos lidos para a aviavel messages
 
 numero_teste = (len(dados_tests))
 
@@ -32,70 +36,97 @@ for ind_tests in range(numero_teste):
 
     soma_linha = 0
     soma_coluna = 0
-    stop = False
 
     print('\n')
     print('Teste ', mpsoc['id'])
     for b in range(numero_apps):#for para ler os apps de cada teste
         app = apps[b]
         app_name = app['app_name']
+
         for c in range(len(dados_apps)):#for para buscar as especificações de cada app
             app_test = dados_apps[c]
             name = app_test['name']
             qtd_apps = app['qtd_apps']
+            formato = -1
+
             if app_name == name:
-                print(name)
-                stop = False
-                tasks = app_test['tasks']
-                for e in range(qtd_apps):#for para rodas tantas vezes um app, se tiver mas tarefas do que nodos disponiveis no cluster o for é quebrado
-                    for d in range(app_test['number_tasks']):#for para buscar as tarefas de cada app
-                        task = tasks[d]
-                        ID = task['id']
-                        print(ID)
-                        if matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] == 0:#caso o nodo esteja livre insere se não busca outro
-                            matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] = ID+1 #adiciona os dados na matriz 
-                        else:
-                            d-=1
-                        if profundidade < (tasks_per_pe-1):#vai mudando as possições para salvar as tarefas
-                            profundidade +=1
-                        else:
-                            profundidade = 0
-                            if (coluna) < (cluster_y-1):
-                                coluna += 1 
-                            else:
-                                coluna = 0
-                                if (linha) < (cluster_x-1):
-                                    linha += 1
-                                else:
-                                    linha = 0
-                                    stop = True # para quebrar o for quando tiver mais tarefas do que espaço
-                                    break
-                    if stop == True:
-                        break
+                print(name, " X", qtd_apps, sep="")
+                tabela = fm.map_app(name, tasks_per_pe)
+                e = 0
+                while e < qtd_apps:#while para rodas tantas vezes um app, se tiver mas tarefas do que nodos disponiveis no cluster o for é quebrado
 
-                if cluster < (numero_clusters-1):#muda de cluster para cada app
-                        cluster +=1
-                        [soma_linha,soma_coluna]=f.posicao_cluster(cluster, mpsoc_x, mpsoc_y, cluster_x, cluster_y)
-                        linha = 0
-                        coluna = 0
+                    if matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] == 0:#caso o nodo esteja livre insere se não busca outro
+                        
+                        for d in range(len(tabela)):
+                            #ifs para de as leituras não ultrapassem o tamanho da matrix
+                            if profundidade+tabela[d][3] > tasks_per_pe-1:
+                                e-=1
+                                break
+                            if linha+soma_linha+tabela[d][1] > cluster_x+soma_linha-1:
+                                e-=1
+                                break
+                            if coluna+soma_coluna+tabela[d][2] > cluster_y+soma_coluna-1:
+                                e-=1
+                                break
+                            #if para verificar se os nos que preciso estao livres na matriz
+                            if matriz_tri[(profundidade+tabela[d][3]),(linha+soma_linha+tabela[d][1]),(coluna+soma_coluna+tabela[d][2])] != 0:
+                                e-=1
+                                break
+                        else:
+                            #adiciona os nos na matriz
+                            for d in range(len(tabela)):
+                                matriz_tri[(profundidade+tabela[d][3]),(linha+soma_linha+tabela[d][1]),(coluna+soma_coluna+tabela[d][2])] = tabela[d][0]+1
+                    else:
+                        e-=1
+
+                    if profundidade < (tasks_per_pe-1):#vai mudando as possições para salvar as tarefas
+                        profundidade +=1
+                    else:
                         profundidade = 0
-                else:
-                    cluster = 0
-
+                        if coluna < (cluster_y-1):
+                            coluna += 1 
+                        else:
+                            coluna = 0
+                            if linha < (cluster_x-1):
+                                linha += 1
+                            else:
+                                if cluster < (numero_clusters-1):#muda de cluster para cada app
+                                    cluster +=1
+                                    [soma_linha,soma_coluna]=fm.posicao_cluster(cluster, mpsoc_x, mpsoc_y, cluster_x, cluster_y)
+                                    linha = 0
+                                    coluna = 0
+                                    profundidade = 0
+                                else:
+                                    cluster = 0
+                                    formato+=1
+                                    tabela = fm.map_app(name, tasks_per_pe, formato)
+                    e+=1
+               
+            
             
 
 
+    fm.mostrar(matriz_tri, mpsoc_x, mpsoc_y, cluster_x, cluster_y, tasks_per_pe)
 
 
 
-   
-    f.mostrar(matriz_tri, mpsoc_x, mpsoc_y, cluster_x, cluster_y, tasks_per_pe)
-   
+    ##isso vai para a função do andrei
+    '''
+    app = 'App2'
+    mapa_app = fm.map_app(app, tasks_per_pe)
+    tabela_custos = fc.tabela_custos(app, messages)
+    tabela_comunicacao = fc.tabela_comunicacao(app, dados_apps, mapa_app)
+    '''
     
     
+    #print('\n'.join(map(str, tabela_comunicacao)))
+   
+   # tabela = fc.tabela(app, dados_apps)
+   # print(tabela)
+   # print('\n'.join(map(str, tabela)))
 
            
-#[i,j] = f.localiza(matriz_tri, 3, 3, mpsoc_x, mpsoc_y, cluster_x,cluster_y)
+#[i,j] = fm.localiza(matriz_tri, 3, 3, mpsoc_x, mpsoc_y, cluster_x,cluster_y)
 #print(i)
 #print(j)
 

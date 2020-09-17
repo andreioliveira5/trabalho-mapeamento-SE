@@ -13,7 +13,7 @@
 				[
 					{
 						"id": 1,
-						"load_communication": 300
+						"communication": 300
 					}
 				]
 			},
