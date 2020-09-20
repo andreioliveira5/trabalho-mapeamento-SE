@@ -37,6 +37,8 @@ for ind_tests in range(numero_teste):
     soma_linha = 0
     soma_coluna = 0
 
+    custo_total_comunicacao = 0
+
     print('\n')
     print('Teste ', mpsoc['id'])
     for b in range(numero_apps):#for para ler os apps de cada teste
@@ -51,31 +53,31 @@ for ind_tests in range(numero_teste):
 
             if app_name == name:
                 print(name, " X", qtd_apps, sep="")
-                tabela = fm.map_app(name, tasks_per_pe)
+                mapa_app = fm.map_app(name, tasks_per_pe)
                 e = 0
                 while e < qtd_apps:#while para rodas tantas vezes um app, se tiver mas tarefas do que nodos disponiveis no cluster o for é quebrado
 
                     if matriz_tri[profundidade,(linha+soma_linha),(coluna+soma_coluna)] == 0:#caso o nodo esteja livre insere se não busca outro
                         
-                        for d in range(len(tabela)):
+                        for d in range(len(mapa_app)):
                             #ifs para de as leituras não ultrapassem o tamanho da matrix
-                            if profundidade+tabela[d][3] > tasks_per_pe-1:
+                            if profundidade+mapa_app[d][3] > tasks_per_pe-1:
                                 e-=1
                                 break
-                            if linha+soma_linha+tabela[d][1] > cluster_x+soma_linha-1:
+                            if linha+soma_linha+mapa_app[d][1] > cluster_x+soma_linha-1:
                                 e-=1
                                 break
-                            if coluna+soma_coluna+tabela[d][2] > cluster_y+soma_coluna-1:
+                            if coluna+soma_coluna+mapa_app[d][2] > cluster_y+soma_coluna-1:
                                 e-=1
                                 break
                             #if para verificar se os nos que preciso estao livres na matriz
-                            if matriz_tri[(profundidade+tabela[d][3]),(linha+soma_linha+tabela[d][1]),(coluna+soma_coluna+tabela[d][2])] != 0:
+                            if matriz_tri[(profundidade+mapa_app[d][3]),(linha+soma_linha+mapa_app[d][1]),(coluna+soma_coluna+mapa_app[d][2])] != 0:
                                 e-=1
                                 break
                         else:
                             #adiciona os nos na matriz
-                            for d in range(len(tabela)):
-                                matriz_tri[(profundidade+tabela[d][3]),(linha+soma_linha+tabela[d][1]),(coluna+soma_coluna+tabela[d][2])] = tabela[d][0]+1
+                            for d in range(len(mapa_app)):
+                                matriz_tri[(profundidade+mapa_app[d][3]),(linha+soma_linha+mapa_app[d][1]),(coluna+soma_coluna+mapa_app[d][2])] = mapa_app[d][0]+1
                     else:
                         e-=1
 
@@ -99,26 +101,18 @@ for ind_tests in range(numero_teste):
                                 else:
                                     cluster = 0
                                     formato+=1
-                                    tabela = fm.map_app(name, tasks_per_pe, formato)
+                                    mapa_app = fm.map_app(name, tasks_per_pe, formato)
                     e+=1
-               
+                tabela_messagens = fc.tabela_messagens(name, messages)
+                tabela_comunicacao = fc.tabela_comunicacao(name, dados_apps, mapa_app)
+                custo_total_comunicacao += (fc.calculo_custo(tabela_comunicacao, tabela_messagens)*qtd_apps)
             
             
 
 
     fm.mostrar(matriz_tri, mpsoc_x, mpsoc_y, cluster_x, cluster_y, tasks_per_pe)
-
-
-
-    ##isso vai para a função do andrei
+    print("Custo total de comunicação: ", custo_total_comunicacao)
     
-    app = 'App2'
-    mapa_app = fm.map_app(app, tasks_per_pe)
-    tabela_custos = fc.tabela_custos(app, messages)
-    tabela_comunicacao = fc.tabela_comunicacao(app, dados_apps, mapa_app)
-    soma = fc.calculo_custo(tabela_comunicacao)
-     
-    print(soma)
     
     #print('\n'.join(map(str, tabela_comunicacao)))
    
