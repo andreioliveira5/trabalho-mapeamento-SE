@@ -111,13 +111,14 @@ for ind_tests in range(numero_teste):
 
 
     ##isso vai para a função do andrei
-    '''
+    
     app = 'App2'
     mapa_app = fm.map_app(app, tasks_per_pe)
     tabela_custos = fc.tabela_custos(app, messages)
     tabela_comunicacao = fc.tabela_comunicacao(app, dados_apps, mapa_app)
-    '''
-    
+    soma = fc.calculo_custo(tabela_comunicacao)
+     
+    print(soma)
     
     #print('\n'.join(map(str, tabela_comunicacao)))
    

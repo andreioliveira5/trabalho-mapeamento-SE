@@ -41,12 +41,10 @@ def tabela_comunicacao(app, dados_apps, mapa_app):#função para criar uma tabel
                 pulos = abs(mapa_app[source][1] - mapa_app[target][1]) + abs(mapa_app[source][2] - mapa_app[target][2])
             
             #Salva os dados na tabela
-            tabela.append([tasks[b]['id'] , task_communications[c]['id'] , task_communications[c]['communication'], pulos])
+            tabela.append([tasks[b]['id'] , task_communications[c]['id'] , task_communications[c]['communication'], pulos])##
 
     return(tabela)
-
-
-
+    
 def tabela(app, dados_apps):# será a dinsao de gerará a funçao map_app
     for a in range((len(dados_apps))):
         if app == dados_apps[a]['name']:
@@ -63,3 +61,9 @@ def tabela(app, dados_apps):# será a dinsao de gerará a funçao map_app
        # print(tabela)
         tabela = [[tasks[b]['id']+1]] + tabela #adiciona em cima
     return(tabela)
+
+def calculo_custo(tabela_comunicacao):
+    soma=0
+    for g in range((len(tabela_comunicacao))):
+        soma = soma+(tabela_comunicacao[g][2]*tabela_comunicacao[g][3])  
+    return(soma)
