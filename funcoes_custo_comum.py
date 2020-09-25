@@ -11,12 +11,12 @@ def tabela_messagens(app, messages):#função para criar uma tabela com as mensa
     return(tabela)
 
 
-def tabela_comunicacao(app, dados_apps, mapa_app):#função para criar uma tabela com as comunicações entre as tarefas do app [sorce, targe, custo de comunicação(communication), pulos até o destino]
+def tabela_comunicacao(app, dados_apps, mapa_app):#função para criar uma tabela com as comunicações entre as tarefas do app [sorce, targe, custo de comunicação(communication), hops (pulos) até o destino]
     for a in range((len(dados_apps))):
         if app == dados_apps[a]['name']:
             tasks = dados_apps[a]['tasks']
             break
-    tabela_pulos = []
+    tabela_hops = []
 
 
     tabela = []
@@ -32,16 +32,16 @@ def tabela_comunicacao(app, dados_apps, mapa_app):#função para criar uma tabel
 
             #ocnta a distancia do source para o target
             if mapa_app[source][1] == mapa_app[target][1] and mapa_app[source][2] == mapa_app[target][2]:
-                pulos = 0
+                hops = 0
             if mapa_app[source][1] == mapa_app[target][1] and mapa_app[source][2] != mapa_app[target][2]:
-                pulos = abs(mapa_app[source][2] - mapa_app[target][2])
+                hops = abs(mapa_app[source][2] - mapa_app[target][2])
             if mapa_app[source][1] != mapa_app[target][1] and mapa_app[source][2] == mapa_app[target][2]:
-                pulos = abs(mapa_app[source][1] - mapa_app[target][1])
+                hops = abs(mapa_app[source][1] - mapa_app[target][1])
             if mapa_app[source][1] != mapa_app[target][1] and mapa_app[source][2] != mapa_app[target][2]:
-                pulos = abs(mapa_app[source][1] - mapa_app[target][1]) + abs(mapa_app[source][2] - mapa_app[target][2])
+                hops = abs(mapa_app[source][1] - mapa_app[target][1]) + abs(mapa_app[source][2] - mapa_app[target][2])
             
             #Salva os dados na tabela
-            tabela.append([tasks[b]['id'] , task_communications[c]['id'] , task_communications[c]['communication'], pulos])
+            tabela.append([tasks[b]['id'] , task_communications[c]['id'] , task_communications[c]['communication'], hops])
 
     return(tabela)
 

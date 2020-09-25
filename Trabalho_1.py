@@ -3,6 +3,7 @@ import json
 import funcoes_mapeamento as fm
 import funcoes_custo_comum as fc
 
+
 with open('tests.json', 'r') as json_file: #le os aquivos do arquivo json
     dados_tests = json.load(json_file) # passa os aquivos lidos para a aviavel dados_tests
 
@@ -53,7 +54,7 @@ for ind_tests in range(numero_teste):
 
             if app_name == name:
                 print(name, " X", qtd_apps, sep="")
-                mapa_app = fm.map_app(name, tasks_per_pe)
+                mapa_app = fm.map_app(app_test,dados_apps,cluster_x,cluster_y,tasks_per_pe,formato)
                 e = 0
                 while e < qtd_apps:#while para rodas tantas vezes um app, se tiver mas tarefas do que nodos disponiveis no cluster o for é quebrado
 
@@ -101,7 +102,7 @@ for ind_tests in range(numero_teste):
                                 else:
                                     cluster = 0
                                     formato+=1
-                                    mapa_app = fm.map_app(name, tasks_per_pe, formato)
+                                    mapa_app = fm.map_app(app_test,dados_apps,cluster_x,cluster_y,tasks_per_pe,formato)                
                     e+=1
                 tabela_messagens = fc.tabela_messagens(name, messages)
                 tabela_comunicacao = fc.tabela_comunicacao(name, dados_apps, mapa_app)
@@ -113,7 +114,7 @@ for ind_tests in range(numero_teste):
     fm.mostrar(matriz_tri, mpsoc_x, mpsoc_y, cluster_x, cluster_y, tasks_per_pe)
     print("Custo total de comunicação: ", custo_total_comunicacao)
     
-    
+
     #print('\n'.join(map(str, tabela_comunicacao)))
    
    # tabela = fc.tabela(app, dados_apps)
@@ -124,4 +125,3 @@ for ind_tests in range(numero_teste):
 #[i,j] = fm.localiza(matriz_tri, 3, 3, mpsoc_x, mpsoc_y, cluster_x,cluster_y)
 #print(i)
 #print(j)
-
